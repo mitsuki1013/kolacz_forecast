@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  php:
+    container_name: php
+    build: ./docker/php
+    volumes:
+    - ./server:/var/www
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    ports:
+    - 80:80
+    volumes:
+    - ./server:/var/www
+    - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+    - php
+
+  db:
+    image: mysql:8.0
+    container_name: mysql
+    # restart: always
+    environment:
+      MYSQL_DATABASE: compa
+      MYSQL_USER: mitsuki_yamauchi_compa
+      MYSQL_PASSWORD: 813821mySM
+      MYSQL_ROOT_PASSWORD: 813821mySM
+      TZ: 'Asia/Tokyo'
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci 
+    ports:
+      - "3306:3306"
+    volumes:
+    - db-store:/var/lib/mysql # データの永続化->名前付きボリュームにマウント
+    - ./docker/db/sql:/docker-entrypoint-initdb.d # 初期データのマウント
+    - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf 
+
+volumes:
+  db-store:
