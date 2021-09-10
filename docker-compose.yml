@@ -30,9 +30,9 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - yamauchi_laravel_project-store:/var/lib/mysql # データの永続化->名前付きボリュームにマウント
+      - kolacz_forecast:/var/lib/mysql # データの永続化->名前付きボリュームにマウント
       - ./docker/db/sql:/docker-entrypoint-initdb.d # 初期データのマウント
       - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf 
 
 volumes:
-  yamauchi_laravel_project-store:
+  kolacz_forecast:
